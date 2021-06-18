@@ -32,8 +32,8 @@ namespace LatestWEBAPI.Controllers
                         select DepartmentID, DepartmentName from dbo.department";
             DataTable table = new DataTable();
             string sqldatasource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader  myReader;
-            using(SqlConnection myCon = new SqlConnection(sqldatasource))
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqldatasource))
             {
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
@@ -56,7 +56,7 @@ namespace LatestWEBAPI.Controllers
         public JsonResult Post(Department dep)
         {
             string query = @"
-                        insert into dbo.Department values ('"+dep.DepartmentName+@"')";
+                        insert into dbo.Department values ('" + dep.DepartmentName + @"')";
             DataTable table = new DataTable();
             string sqldatasource = _configuration.GetConnectionString("EmployeeAppCon");
             SqlDataReader myReader;
@@ -74,6 +74,69 @@ namespace LatestWEBAPI.Controllers
             }
 
             return new JsonResult("Department Added Succesfully");
+        }
+
+
+        //Adding a PUT method to update data
+
+        [HttpPut]
+
+        public JsonResult Put(Department dep)
+        {
+            string query = @"
+                        update dbo.Department set
+                        DepartmentName = '" + dep.DepartmentName + @"'
+                        where DepartmentId = " + dep.DepartmentID + @";
+";
+            DataTable table = new DataTable();
+            string sqldatasource = _configuration.GetConnectionString("EmployeeAppCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqldatasource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader); ;
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult("Department Updated Succesfully");
+        }
+
+
+        //Adding a DELETE method to delete data from sql server//
+
+        //when you want to add the parameter in the url, insert it to post http
+
+        [HttpDelete("{id}")]
+
+        public JsonResult Delete(int id)
+        {
+            string query = @"
+                        delete from dbo.Department 
+                        where DepartmentId = " + id + @";
+";
+            DataTable table = new DataTable();
+            string sqldatasource = _configuration.GetConnectionString("EmployeeAppCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqldatasource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader); ;
+
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult("Department Deleted Succesfully");
         }
 
     }
