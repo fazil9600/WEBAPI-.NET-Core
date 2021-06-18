@@ -16,6 +16,15 @@ namespace LatestWEBAPI.Controllers
     public class DepartmentController : ControllerBase
     {
 
+        //Start Method//
+
+        public void SqlSetup()
+        {
+
+        }
+
+        //End Method//
+
         private readonly IConfiguration _configuration;
 
         public DepartmentController(IConfiguration configuration)
